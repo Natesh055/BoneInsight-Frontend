@@ -1,75 +1,63 @@
-import React, { useState, useRef } from "react";
+// src/components/FileUpload.jsx
+import React, { useState } from "react";
+import { useAuth } from "../context/AuthContext.jsx";
+import axios from "axios";
 
 export default function FileUpload({ onUpload }) {
+  const { token } = useAuth();
   const [file, setFile] = useState(null);
-  const [dragOver, setDragOver] = useState(false);
-  const fileInputRef = useRef();
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
 
-  const containerStyle = {
-    border: `2px dashed ${dragOver ? "#2076d4" : "#c6d2e0"}`,
-    borderRadius: "12px",
-    padding: "32px",
-    textAlign: "center",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-    backgroundColor: dragOver ? "#f0f7fd" : "#f8fbfd",
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+    setError("");
   };
 
-  const buttonStyle = {
-    marginTop: "12px",
-    padding: "8px 20px",
-    backgroundColor: "#2076d4",
-    color: "#fff",
-    border: "none",
-    borderRadius: "8px",
-    fontWeight: 600,
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  };
-
-  const handleDrop = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setDragOver(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      setFile(e.dataTransfer.files[0]);
-      e.dataTransfer.clearData();
+    if (!file) {
+      setError("Please select a file to upload.");
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("xray", file);
+
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_BASE}/api/xrays/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      onUpload(file); // callback after success
+      setFile(null);
+      alert("File uploaded successfully!");
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || "Upload failed!");
+    } finally {
+      setUploading(false);
     }
   };
 
-  const handleChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!file) return;
-    onUpload(file);
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
-      <div
-        style={containerStyle}
-        onClick={() => fileInputRef.current.click()}
-        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={handleDrop}
-      >
-        {file ? (
-          <p>{file.name}</p>
-        ) : (
-          <p>Drag & drop your X-ray here, or click to select a file</p>
-        )}
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          onChange={handleChange}
-          style={{ display: "none" }}
-        />
-      </div>
-      <button type="submit" style={buttonStyle} disabled={!file}>
-        Upload
+    <form
+      onSubmit={handleSubmit}
+      style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+    >
+      <input type="file" accept="image/*" onChange={handleFileChange} />
+      {error && <div style={{ color: "red" }}>{error}</div>}
+      <button type="submit" disabled={uploading}>
+        {uploading ? "Uploading..." : "Upload X-ray"}
       </button>
     </form>
   );

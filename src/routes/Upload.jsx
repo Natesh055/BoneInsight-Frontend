@@ -1,3 +1,4 @@
+// src/pages/Upload.jsx
 import React from "react";
 import Navbar from "../components/Navbar.jsx";
 import Sidebar from "../components/Sidebar.jsx";
@@ -8,8 +9,8 @@ export default function Upload() {
   const { user } = useAuth();
 
   const handleUpload = (file) => {
-    alert(`File ready to upload: ${file.name}`);
-    // TODO: connect to backend API
+    console.log("Uploaded file:", file);
+    alert(`File uploaded successfully: ${file.name}`);
   };
 
   const wrapperStyle = {
