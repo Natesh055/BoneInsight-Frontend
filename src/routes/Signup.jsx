@@ -21,100 +21,123 @@ export default function Signup() {
     }
   };
 
+  /* ---------- Inline CSS ---------- */
   const containerStyle = {
     display: "flex",
+    flexDirection: "column",
     minHeight: "100vh",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#f9fafb",
-    padding: "16px",
+    background: "linear-gradient(135deg, #2076d4 0%, #6fa9f9 100%)",
+    padding: "20px",
+    fontFamily: "'Inter', sans-serif",
+  };
+
+  const projectTitleStyle = {
+    fontSize: "2.5rem",
+    fontWeight: "900",
+    color: "#ffffff",
+    marginBottom: "25px",
+    textShadow: "0 4px 12px rgba(0,0,0,0.3)",
+    letterSpacing: "1px",
   };
 
   const formStyle = {
     width: "100%",
     maxWidth: "440px",
-    padding: "32px",
-    borderRadius: "24px",
-    backgroundColor: "#ffffff",
-    boxShadow: "0 15px 30px rgba(0,0,0,0.1)",
+    padding: "36px",
+    borderRadius: "20px",
+    backgroundColor: "#fff",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
     display: "flex",
     flexDirection: "column",
-    gap: "20px",
-    transition: "all 0.3s",
+    gap: "18px",
+    transition: "transform 0.3s ease, box-shadow 0.3s ease",
   };
 
   const headingStyle = {
     textAlign: "center",
-    fontSize: "1.875rem",
+    fontSize: "1.8rem",
     fontWeight: "800",
     color: "#182133",
+    marginBottom: "5px",
+  };
+
+  const subHeadingStyle = {
+    textAlign: "center",
+    fontSize: "0.95rem",
+    color: "#6c7a91",
+    marginBottom: "15px",
   };
 
   const inputStyle = {
     width: "100%",
-    padding: "12px",
+    padding: "14px 16px",
     borderRadius: "12px",
-    border: "1.5px solid #c6d2e0",
+    border: "1.5px solid #cbd5e1",
     outline: "none",
     fontSize: "1rem",
     color: "#182133",
-  };
-
-  const inputFocusStyle = {
-    borderColor: "#2076d4",
-    boxShadow: "0 0 5px rgba(32, 118, 212, 0.2)",
+    transition: "all 0.2s ease",
   };
 
   const buttonStyle = {
     width: "100%",
-    padding: "12px",
+    padding: "14px",
     borderRadius: "12px",
-    backgroundColor: "#2076d4",
-    color: "#fff",
-    fontWeight: "600",
+    background: "linear-gradient(135deg, #2076d4, #185bb0)",
+    color: "#ffffff",
+    fontWeight: "700",
     fontSize: "1rem",
     border: "none",
     cursor: "pointer",
-    boxShadow: "0 4px 12px rgba(32, 118, 212, 0.3)",
-    transition: "all 0.3s",
+    boxShadow: "0 6px 16px rgba(32, 118, 212, 0.35)",
+    transition: "all 0.3s ease",
   };
 
   const buttonHoverStyle = {
-    backgroundColor: "#1a5498",
-    boxShadow: "0 6px 18px rgba(32, 118, 212, 0.3)",
+    background: "linear-gradient(135deg, #185bb0, #0f3d7a)",
+    transform: "translateY(-2px)",
   };
 
   const errorStyle = {
     borderRadius: "12px",
     border: "1px solid #f35260",
     backgroundColor: "#ffe5e7",
-    color: "#f35260",
-    padding: "10px",
+    color: "#d92b3a",
+    padding: "12px",
     fontSize: "0.95rem",
     textAlign: "center",
+    fontWeight: "500",
   };
 
   const linkStyle = {
     color: "#2076d4",
     textDecoration: "none",
-    fontWeight: "500",
+    fontWeight: "600",
+  };
+
+  const signupTextStyle = {
+    textAlign: "center",
+    color: "#555",
+    fontSize: "0.95rem",
+    marginTop: "10px",
   };
 
   return (
     <div style={containerStyle}>
-      <form
-        onSubmit={handleSubmit}
-        style={formStyle}
-        onFocus={(e) => (e.target.style = { ...inputStyle, ...inputFocusStyle })}
-        onBlur={(e) => (e.target.style = inputStyle)}
-      >
-        <h1 style={headingStyle}>Create an Account</h1>
+      {/* 🔥 Project Title */}
+      <h1 style={projectTitleStyle}>BoneInsight</h1>
+
+      <form onSubmit={handleSubmit} style={formStyle}>
+        <h2 style={headingStyle}>Create an Account</h2>
+        <p style={subHeadingStyle}>Join BoneInsight and get started</p>
 
         {error && <div style={errorStyle}>{error}</div>}
 
         <input
           type="text"
-          placeholder="Full Name"
+          placeholder="👤 Full Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
           style={inputStyle}
@@ -123,7 +146,7 @@ export default function Signup() {
 
         <input
           type="email"
-          placeholder="Email Address"
+          placeholder="📧 Email Address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={inputStyle}
@@ -132,7 +155,7 @@ export default function Signup() {
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder="🔒 Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           style={inputStyle}
@@ -151,13 +174,13 @@ export default function Signup() {
         <button
           type="submit"
           style={buttonStyle}
-          onMouseEnter={(e) => Object.assign(e.target.style, buttonHoverStyle)}
+          onMouseEnter={(e) => Object.assign(e.target.style, buttonStyle, buttonHoverStyle)}
           onMouseLeave={(e) => Object.assign(e.target.style, buttonStyle)}
         >
           Signup
         </button>
 
-        <p style={{ textAlign: "center", color: "#555", fontSize: "0.9rem" }}>
+        <p style={signupTextStyle}>
           Already have an account?{" "}
           <a href="/" style={linkStyle}>
             Log in here

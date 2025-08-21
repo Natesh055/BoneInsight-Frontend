@@ -1,4 +1,3 @@
-// src/pages/Upload.jsx
 import React from "react";
 import Navbar from "../components/Navbar.jsx";
 import Sidebar from "../components/Sidebar.jsx";
@@ -13,40 +12,44 @@ export default function Upload() {
     alert(`File uploaded successfully: ${file.name}`);
   };
 
+  /* ---------- Inline Styles ---------- */
   const wrapperStyle = {
     display: "flex",
     flexDirection: "column",
     minHeight: "100vh",
     fontFamily: "'Inter', sans-serif",
-    background: "linear-gradient(120deg, #f6faff 0%, #e3eaea 100%)",
+    background: "linear-gradient(120deg, #f8fbff 0%, #eef4f7 100%)",
     color: "#182133",
   };
 
   const mainStyle = {
     display: "flex",
     flex: 1,
-    padding: "32px",
+    padding: "28px 36px",
+    gap: "24px",
   };
 
   const contentStyle = {
     flex: 1,
     display: "flex",
     flexDirection: "column",
-    gap: "24px",
+    gap: "28px",
   };
 
   const headingStyle = {
-    fontSize: "1.8rem",
-    fontWeight: "700",
+    fontSize: "1.9rem",
+    fontWeight: "800",
     marginBottom: "16px",
     color: "#2076d4",
+    letterSpacing: "0.2px",
   };
 
   const uploadContainerStyle = {
-    padding: "24px",
-    borderRadius: "18px",
+    padding: "28px",
+    borderRadius: "20px",
     backgroundColor: "#ffffff",
-    boxShadow: "0 4px 32px rgba(43, 83, 135, 0.13)",
+    boxShadow: "0 8px 30px rgba(0,0,0,0.08)",
+    transition: "box-shadow 0.3s ease",
   };
 
   return (
@@ -55,8 +58,18 @@ export default function Upload() {
       <div style={mainStyle}>
         <Sidebar role={user?.role} />
         <main style={contentStyle}>
-          <div style={uploadContainerStyle}>
-            <h1 style={headingStyle}>Upload X-ray Scan</h1>
+          <div
+            style={uploadContainerStyle}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.boxShadow =
+                "0 12px 40px rgba(32,118,212,0.15)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.boxShadow =
+                "0 8px 30px rgba(0,0,0,0.08)")
+            }
+          >
+            <h1 style={headingStyle}>Upload X-ray Scan 🩻</h1>
             <FileUpload onUpload={handleUpload} />
           </div>
         </main>

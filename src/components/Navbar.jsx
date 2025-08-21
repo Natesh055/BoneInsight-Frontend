@@ -8,41 +8,72 @@ export default function Navbar() {
   const navStyle = {
     backgroundColor: "#2076d4",
     color: "#fff",
-    padding: "16px 32px",
+    padding: "16px 36px",
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     fontFamily: "'Inter', sans-serif",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+    boxShadow: "0 3px 12px rgba(0,0,0,0.15)",
+    position: "sticky",
+    top: 0,
+    zIndex: 1000,
   };
 
   const brandStyle = {
-    fontWeight: "700",
-    fontSize: "1.5rem",
+    fontWeight: "900",
+    fontSize: "1.75rem",
+    letterSpacing: "1.5px",
+    textShadow: "0 2px 4px rgba(0,0,0,0.2)",
+    userSelect: "none",
   };
 
   const linkStyle = {
-    marginLeft: "16px",
+    marginLeft: "20px",
     textDecoration: "none",
-    color: "#fff",
-    fontWeight: 500,
-    transition: "all 0.2s ease",
+    color: "#dbeafe", /* lighter blue for subtle contrast */
+    fontWeight: 600,
+    fontSize: "1rem",
+    transition: "color 0.25s ease",
+  };
+
+  const linkHoverStyle = {
+    color: "#ffffff",
   };
 
   const buttonStyle = {
-    marginLeft: "16px",
-    padding: "6px 14px",
-    borderRadius: "8px",
+    marginLeft: "20px",
+    padding: "8px 18px",
+    borderRadius: "10px",
     border: "none",
     backgroundColor: "#ffffff",
     color: "#2076d4",
-    fontWeight: 600,
+    fontWeight: 700,
+    fontSize: "1rem",
     cursor: "pointer",
-    transition: "all 0.2s ease",
+    boxShadow: "0 3px 10px rgba(32, 118, 212, 0.3)",
+    transition: "background-color 0.3s ease, box-shadow 0.3s ease",
+    userSelect: "none",
   };
 
-  const buttonHover = {
+  const buttonHoverStyle = {
     backgroundColor: "#e1f0ff",
+    boxShadow: "0 6px 16px rgba(32, 118, 212, 0.5)",
+  };
+
+  const userInfoStyle = {
+    marginRight: "12px",
+    fontWeight: 600,
+    fontSize: "1rem",
+    color: "#dbeafe",
+    userSelect: "none",
+  };
+
+  // Handlers for hover effects on links (since inline style can't do :hover)
+  const handleLinkMouseEnter = (e) => {
+    Object.assign(e.target.style, linkHoverStyle);
+  };
+  const handleLinkMouseLeave = (e) => {
+    Object.assign(e.target.style, linkStyle);
   };
 
   return (
@@ -51,11 +82,11 @@ export default function Navbar() {
       <div style={{ display: "flex", alignItems: "center" }}>
         {user ? (
           <>
-            <span>{user.name} ({user.role})</span>
+            <span style={userInfoStyle}>{user.name} ({user.role})</span>
             <button
               onClick={logout}
               style={buttonStyle}
-              onMouseEnter={(e) => Object.assign(e.target.style, buttonHover)}
+              onMouseEnter={(e) => Object.assign(e.target.style, buttonHoverStyle)}
               onMouseLeave={(e) => Object.assign(e.target.style, buttonStyle)}
             >
               Logout
@@ -63,8 +94,22 @@ export default function Navbar() {
           </>
         ) : (
           <>
-            <Link to="/" style={linkStyle}>Login</Link>
-            <Link to="/signup" style={linkStyle}>Signup</Link>
+            <Link
+              to="/"
+              style={linkStyle}
+              onMouseEnter={handleLinkMouseEnter}
+              onMouseLeave={handleLinkMouseLeave}
+            >
+              Login
+            </Link>
+            <Link
+              to="/signup"
+              style={linkStyle}
+              onMouseEnter={handleLinkMouseEnter}
+              onMouseLeave={handleLinkMouseLeave}
+            >
+              Signup
+            </Link>
           </>
         )}
       </div>

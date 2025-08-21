@@ -3,39 +3,62 @@ import { Link } from "react-router-dom";
 
 export default function Sidebar({ role }) {
   const sidebarStyle = {
-    backgroundColor: "#f8fafd",
+    backgroundColor: "#f0f4fb",
     width: "220px",
     minHeight: "100vh",
-    padding: "24px",
-    boxShadow: "2px 0 12px rgba(0, 0, 0, 0.05)",
+    padding: "32px 24px",
+    boxShadow: "2px 0 16px rgba(32, 118, 212, 0.1)",
     display: "flex",
     flexDirection: "column",
-    gap: "16px",
+    gap: "24px",
+    fontFamily: "'Inter', sans-serif",
   };
 
-  const linkStyle = {
+  const listStyle = {
+    listStyle: "none",
+    padding: 0,
+    margin: 0,
+    display: "flex",
+    flexDirection: "column",
+    gap: "18px",
+  };
+
+  const linkBaseStyle = {
     color: "#182133",
     textDecoration: "none",
-    fontWeight: 500,
-    padding: "10px 12px",
-    borderRadius: "8px",
-    transition: "all 0.2s ease",
+    fontWeight: 600,
+    padding: "12px 16px",
+    borderRadius: "10px",
+    transition: "all 0.3s ease",
+    fontSize: "1rem",
+    userSelect: "none",
+    display: "block",
   };
 
   const linkHoverStyle = {
-    color: "#fff",
+    color: "#ffffff",
     backgroundColor: "#2076d4",
+    boxShadow: "0 4px 12px rgba(32, 118, 212, 0.4)",
+  };
+
+  // Function to merge base and hover style on events
+  const handleMouseEnter = (e) => {
+    Object.assign(e.target.style, linkBaseStyle, linkHoverStyle);
+  };
+
+  const handleMouseLeave = (e) => {
+    Object.assign(e.target.style, linkBaseStyle);
   };
 
   return (
     <div style={sidebarStyle}>
-      <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "12px" }}>
+      <ul style={listStyle}>
         <li>
           <Link
             to="/dashboard"
-            style={linkStyle}
-            onMouseEnter={(e) => Object.assign(e.target.style, linkHoverStyle)}
-            onMouseLeave={(e) => Object.assign(e.target.style, linkStyle)}
+            style={linkBaseStyle}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             Dashboard
           </Link>
@@ -43,9 +66,9 @@ export default function Sidebar({ role }) {
         <li>
           <Link
             to="/upload"
-            style={linkStyle}
-            onMouseEnter={(e) => Object.assign(e.target.style, linkHoverStyle)}
-            onMouseLeave={(e) => Object.assign(e.target.style, linkStyle)}
+            style={linkBaseStyle}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             Upload Scan
           </Link>
@@ -53,9 +76,9 @@ export default function Sidebar({ role }) {
         <li>
           <Link
             to="/results"
-            style={linkStyle}
-            onMouseEnter={(e) => Object.assign(e.target.style, linkHoverStyle)}
-            onMouseLeave={(e) => Object.assign(e.target.style, linkStyle)}
+            style={linkBaseStyle}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             Results
           </Link>
@@ -64,9 +87,9 @@ export default function Sidebar({ role }) {
           <li>
             <Link
               to="/admin"
-              style={linkStyle}
-              onMouseEnter={(e) => Object.assign(e.target.style, linkHoverStyle)}
-              onMouseLeave={(e) => Object.assign(e.target.style, linkStyle)}
+              style={linkBaseStyle}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
             >
               Admin Panel
             </Link>

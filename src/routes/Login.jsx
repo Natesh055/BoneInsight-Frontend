@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 import axios from "axios";
 
 export default function Login() {
-  const { setUser } = useAuth(); 
+  const { setUser } = useAuth();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -13,22 +13,16 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // clear old error
+    setError(""); 
     try {
-      // 🔥 call backend login API
       const res = await axios.post("http://localhost:4000/api/auth/login", {
         email,
         password,
       });
 
-      // 🔥 Save token & user
       localStorage.setItem("token", res.data.accessToken);
       localStorage.setItem("user", JSON.stringify(res.data.user));
-
-      // 🔥 Update global auth context
       setUser(res.data.user);
-
-      // 🔥 Navigate to dashboard
       navigate("/dashboard");
     } catch (err) {
       console.error("Login error:", err.response?.data || err.message);
@@ -38,14 +32,18 @@ export default function Login() {
 
   return (
     <div style={containerStyle}>
+      {/* 🔥 Project Title */}
+      <h1 style={projectTitleStyle}>BoneInsight</h1>
+
       <form onSubmit={handleSubmit} style={formStyle}>
-        <h1 style={headingStyle}>Login to your Account</h1>
+        <h2 style={headingStyle}>Welcome Back 👋</h2>
+        <p style={subHeadingStyle}>Login to access your dashboard</p>
 
         {error && <div style={errorStyle}>{error}</div>}
 
         <input
           type="email"
-          placeholder="Email Address"
+          placeholder="📧 Email Address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={inputStyle}
@@ -54,7 +52,7 @@ export default function Login() {
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder="🔒 Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           style={inputStyle}
@@ -65,7 +63,7 @@ export default function Login() {
           Login
         </button>
 
-        <p style={{ textAlign: "center", color: "#555", fontSize: "0.9rem" }}>
+        <p style={signupTextStyle}>
           Don’t have an account?{" "}
           <a href="/signup" style={linkStyle}>
             Sign up here
@@ -76,71 +74,98 @@ export default function Login() {
   );
 }
 
-/* ---------- STYLES ---------- */
+/* ---------- Inline CSS ---------- */
 const containerStyle = {
   display: "flex",
-  minHeight: "100vh",
+  flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  backgroundColor: "#f9fafb",
-  padding: "16px",
+  minHeight: "100vh",
+  background: "linear-gradient(135deg, #2076d4 0%, #6fa9f9 100%)",
+  padding: "20px",
+  fontFamily: "'Inter', sans-serif",
+};
+
+const projectTitleStyle = {
+  fontSize: "2.5rem",
+  fontWeight: "900",
+  color: "#ffffff",
+  marginBottom: "30px",
+  textShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+  letterSpacing: "1px",
 };
 
 const formStyle = {
   width: "100%",
   maxWidth: "420px",
-  padding: "32px",
-  borderRadius: "24px",
+  padding: "40px",
+  borderRadius: "20px",
   backgroundColor: "#ffffff",
-  boxShadow: "0 15px 30px rgba(0,0,0,0.1)",
+  boxShadow: "0 12px 35px rgba(0,0,0,0.15)",
   display: "flex",
   flexDirection: "column",
-  gap: "20px",
+  gap: "18px",
 };
 
 const headingStyle = {
   textAlign: "center",
-  fontSize: "1.875rem",
+  fontSize: "1.7rem",
   fontWeight: "800",
   color: "#182133",
 };
 
+const subHeadingStyle = {
+  textAlign: "center",
+  fontSize: "1rem",
+  color: "#6c7a91",
+  marginBottom: "5px",
+};
+
 const inputStyle = {
   width: "100%",
-  padding: "12px",
+  padding: "14px 16px",
   borderRadius: "12px",
-  border: "1.5px solid #c6d2e0",
+  border: "1.5px solid #cbd5e1",
   outline: "none",
   fontSize: "1rem",
   color: "#182133",
+  transition: "all 0.2s ease",
 };
 
 const buttonStyle = {
   width: "100%",
-  padding: "12px",
+  padding: "14px",
   borderRadius: "12px",
-  backgroundColor: "#2076d4",
+  background: "linear-gradient(135deg, #2076d4, #185bb0)",
   color: "#fff",
-  fontWeight: "600",
+  fontWeight: "700",
   fontSize: "1rem",
   border: "none",
   cursor: "pointer",
-  boxShadow: "0 4px 12px rgba(32, 118, 212, 0.3)",
-  transition: "all 0.3s",
+  boxShadow: "0 6px 16px rgba(32, 118, 212, 0.4)",
+  transition: "all 0.3s ease",
 };
 
 const errorStyle = {
   borderRadius: "12px",
   border: "1px solid #f35260",
   backgroundColor: "#ffe5e7",
-  color: "#f35260",
-  padding: "10px",
+  color: "#d92b3a",
+  padding: "12px",
   fontSize: "0.95rem",
   textAlign: "center",
+  fontWeight: "500",
+};
+
+const signupTextStyle = {
+  textAlign: "center",
+  color: "#555",
+  fontSize: "0.95rem",
+  marginTop: "8px",
 };
 
 const linkStyle = {
   color: "#2076d4",
   textDecoration: "none",
-  fontWeight: "500",
+  fontWeight: "600",
 };

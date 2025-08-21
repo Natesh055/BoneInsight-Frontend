@@ -6,71 +6,90 @@ import { useAuth } from "../context/AuthContext.jsx";
 export default function Dashboard() {
   const { user } = useAuth();
 
+  /* ---------- Inline Styles ---------- */
   const wrapperStyle = {
     display: "flex",
     flexDirection: "column",
     minHeight: "100vh",
     fontFamily: "'Inter', sans-serif",
-    background: "linear-gradient(120deg, #f6faff 0%, #e3eaea 100%)",
+    background: "linear-gradient(120deg, #f8fbff 0%, #eef4f7 100%)",
     color: "#182133",
   };
 
   const mainAreaStyle = {
     display: "flex",
     flex: 1,
-    padding: "32px",
+    padding: "28px 36px",
+    gap: "24px",
   };
 
   const contentStyle = {
     flex: 1,
     display: "flex",
     flexDirection: "column",
-    gap: "24px",
+    gap: "28px",
   };
 
   const welcomeCardStyle = {
-    maxWidth: "100%",
-    padding: "24px",
-    borderRadius: "18px",
-    backgroundColor: "#ffffff",
-    boxShadow: "0 4px 32px rgba(43, 83, 135, 0.13)",
+    width: "100%",
+    padding: "28px",
+    borderRadius: "20px",
+    background: "white",
+    boxShadow: "0 8px 26px rgba(0,0,0,0.08)",
+    transition: "transform 0.2s ease, box-shadow 0.3s ease",
   };
 
   const headingStyle = {
-    fontSize: "1.8rem",
-    fontWeight: "700",
+    fontSize: "1.9rem",
+    fontWeight: "800",
     marginBottom: "8px",
     color: "#2076d4",
+    letterSpacing: "0.3px",
   };
 
   const statusMessageStyle = {
     fontSize: "1rem",
-    color: "#a3a9bb",
+    color: "#6b7280",
   };
 
   const gridStyle = {
     display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "16px",
-    marginTop: "24px",
+    gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+    gap: "20px",
+    marginTop: "8px",
   };
 
   const cardStyle = {
-    backgroundColor: "#f3f7fb",
-    borderRadius: "11px",
-    padding: "16px",
-    boxShadow: "0 2px 14px rgba(120,142,176,0.10)",
+    background: "#ffffff",
+    borderRadius: "16px",
+    padding: "20px",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
+    transition: "transform 0.2s ease, box-shadow 0.3s ease",
+    cursor: "pointer",
+  };
+
+  const scanTitleStyle = {
+    fontWeight: "700",
+    fontSize: "1.1rem",
+    color: "#374151",
+    marginBottom: "6px",
+  };
+
+  const scanDetailStyle = {
+    fontSize: "0.95rem",
+    color: "#6b7280",
+    marginBottom: "4px",
   };
 
   const protectedStyle = {
-    backgroundColor: "#fff8f0",
-    color: "#c6491c",
-    borderRadius: "9px",
+    background: "#fff4e6",
+    color: "#b45309",
+    borderRadius: "12px",
     padding: "16px",
-    marginTop: "24px",
-    border: "1.5px solid #ffd9b5",
+    marginTop: "20px",
+    border: "1.5px solid #fcd9a7",
     textAlign: "center",
-    fontWeight: "500",
+    fontWeight: "600",
   };
 
   return (
@@ -81,7 +100,16 @@ export default function Dashboard() {
 
         <main style={contentStyle}>
           {/* Welcome Card */}
-          <div style={welcomeCardStyle}>
+          <div
+            style={welcomeCardStyle}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.boxShadow = "0 12px 32px rgba(32,118,212,0.15)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.boxShadow =
+                "0 8px 26px rgba(0,0,0,0.08)")
+            }
+          >
             <h1 style={headingStyle}>Welcome, {user?.name} 👋</h1>
             <p style={statusMessageStyle}>
               Your recent scans and analytics will appear here.
@@ -96,12 +124,38 @@ export default function Dashboard() {
               { id: "003", prediction: "Normal", confidence: "92%" },
               { id: "004", prediction: "Abnormal", confidence: "78%" },
             ].map((scan) => (
-              <div key={scan.id} style={cardStyle}>
-                <h2 style={{ fontWeight: "600", marginBottom: "4px" }}>
-                  Scan #{scan.id}
-                </h2>
-                <p>Prediction: {scan.prediction}</p>
-                <p>Confidence: {scan.confidence}</p>
+              <div
+                key={scan.id}
+                style={cardStyle}
+                onMouseEnter={(e) =>
+                  Object.assign(e.currentTarget.style, {
+                    boxShadow: "0 10px 28px rgba(32,118,212,0.15)",
+                    transform: "translateY(-4px)",
+                  })
+                }
+                onMouseLeave={(e) =>
+                  Object.assign(e.currentTarget.style, cardStyle)
+                }
+              >
+                <h2 style={scanTitleStyle}>Scan #{scan.id}</h2>
+                <p style={scanDetailStyle}>
+                  Prediction:{" "}
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color:
+                        scan.prediction === "Normal" ? "#16a34a" : "#dc2626",
+                    }}
+                  >
+                    {scan.prediction}
+                  </span>
+                </p>
+                <p style={scanDetailStyle}>
+                  Confidence:{" "}
+                  <span style={{ fontWeight: "600", color: "#2563eb" }}>
+                    {scan.confidence}
+                  </span>
+                </p>
               </div>
             ))}
           </section>
