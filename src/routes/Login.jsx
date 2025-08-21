@@ -19,32 +19,129 @@ export default function Login() {
     }
   };
 
+  const containerStyle = {
+    display: "flex",
+    minHeight: "100vh",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#f9fafb",
+    padding: "16px",
+  };
+
+  const formStyle = {
+    width: "100%",
+    maxWidth: "420px",
+    padding: "32px",
+    borderRadius: "24px",
+    backgroundColor: "#ffffff",
+    boxShadow: "0 15px 30px rgba(0,0,0,0.1)",
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
+    transition: "all 0.3s",
+  };
+
+  const headingStyle = {
+    textAlign: "center",
+    fontSize: "1.875rem",
+    fontWeight: "800",
+    color: "#182133",
+  };
+
+  const inputStyle = {
+    width: "100%",
+    padding: "12px",
+    borderRadius: "12px",
+    border: "1.5px solid #c6d2e0",
+    outline: "none",
+    fontSize: "1rem",
+    color: "#182133",
+  };
+
+  const inputFocusStyle = {
+    borderColor: "#2076d4",
+    boxShadow: "0 0 5px rgba(32, 118, 212, 0.2)",
+  };
+
+  const buttonStyle = {
+    width: "100%",
+    padding: "12px",
+    borderRadius: "12px",
+    backgroundColor: "#2076d4",
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: "1rem",
+    border: "none",
+    cursor: "pointer",
+    boxShadow: "0 4px 12px rgba(32, 118, 212, 0.3)",
+    transition: "all 0.3s",
+  };
+
+  const buttonHoverStyle = {
+    backgroundColor: "#1a5498",
+    boxShadow: "0 6px 18px rgba(32, 118, 212, 0.3)",
+  };
+
+  const errorStyle = {
+    borderRadius: "12px",
+    border: "1px solid #f35260",
+    backgroundColor: "#ffe5e7",
+    color: "#f35260",
+    padding: "10px",
+    fontSize: "0.95rem",
+    textAlign: "center",
+  };
+
+  const linkStyle = {
+    color: "#2076d4",
+    textDecoration: "none",
+    fontWeight: "500",
+  };
+
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-96 space-y-4">
-        <h1 className="text-2xl font-bold text-center">Login</h1>
-        {error && <p className="text-red-500">{error}</p>}
+    <div style={containerStyle}>
+      <form
+        onSubmit={handleSubmit}
+        style={formStyle}
+        onFocus={(e) => (e.target.style = { ...inputStyle, ...inputFocusStyle })}
+        onBlur={(e) => (e.target.style = inputStyle)}
+      >
+        <h1 style={headingStyle}>Login to your Account</h1>
+
+        {error && <div style={errorStyle}>{error}</div>}
+
         <input
           type="email"
-          placeholder="Email"
+          placeholder="Email Address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 border rounded"
+          style={inputStyle}
           required
         />
+
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 border rounded"
+          style={inputStyle}
           required
         />
-        <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
+
+        <button
+          type="submit"
+          style={buttonStyle}
+          onMouseEnter={(e) => Object.assign(e.target.style, buttonHoverStyle)}
+          onMouseLeave={(e) => Object.assign(e.target.style, buttonStyle)}
+        >
           Login
         </button>
-        <p className="text-sm text-center">
-          Don't have an account? <a href="/signup" className="text-blue-600">Signup</a>
+
+        <p style={{ textAlign: "center", color: "#555", fontSize: "0.9rem" }}>
+          Don't have an account?{" "}
+          <a href="/signup" style={linkStyle}>
+            Sign up here
+          </a>
         </p>
       </form>
     </div>
