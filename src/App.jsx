@@ -12,6 +12,7 @@ import Dashboard from "./routes/Dashboard.jsx";
 import Upload from "./routes/Upload.jsx";
 import Results from "./routes/Results.jsx";
 import AdminPanel from "./routes/AdminPanel.jsx";
+import XrayHistory from "./routes/XrayHistory.jsx"; // ✅ new page
 
 function App() {
   const { user, loading } = useAuth();
@@ -81,6 +82,17 @@ function App() {
             <ProtectedRoute roles={["patient", "doctor"]}>
               <div className="page-container">
                 <Results cardClass="card" />
+              </div>
+            </ProtectedRoute>
+          }
+        />
+        {/* ✅ X-ray History for patients */}
+        <Route
+          path="/history"
+          element={
+            <ProtectedRoute roles={["patient"]}>
+              <div className="page-container">
+                <XrayHistory cardClass="card" />
               </div>
             </ProtectedRoute>
           }

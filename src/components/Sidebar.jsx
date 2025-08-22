@@ -41,11 +41,9 @@ export default function Sidebar({ role }) {
     boxShadow: "0 4px 12px rgba(32, 118, 212, 0.4)",
   };
 
-  // Function to merge base and hover style on events
   const handleMouseEnter = (e) => {
     Object.assign(e.target.style, linkBaseStyle, linkHoverStyle);
   };
-
   const handleMouseLeave = (e) => {
     Object.assign(e.target.style, linkBaseStyle);
   };
@@ -83,6 +81,18 @@ export default function Sidebar({ role }) {
             Results
           </Link>
         </li>
+        {role === "patient" && (
+          <li>
+            <Link
+              to="/history"
+              style={linkBaseStyle}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              View History
+            </Link>
+          </li>
+        )}
         {role === "admin" && (
           <li>
             <Link

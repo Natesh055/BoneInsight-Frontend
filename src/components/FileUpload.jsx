@@ -37,8 +37,13 @@ export default function FileUpload({ onUpload }) {
         }
       );
 
-      onUpload(file); // callback after success
+      // ✅ Backward-compatible: pass uploaded metadata if backend returns it
+      if (onUpload) onUpload(res.data?.xray || file);
+
+      // ✅ Backward-compatible: reset file input
       setFile(null);
+      e.target.reset();
+
       alert("File uploaded successfully!");
     } catch (err) {
       console.error(err);
@@ -65,7 +70,7 @@ export default function FileUpload({ onUpload }) {
   };
 
   const errorStyle = {
-    color: "#f43f5e", // Tailwind's red-500
+    color: "#f43f5e",
     fontWeight: "600",
     fontSize: "0.9rem",
   };
@@ -90,7 +95,6 @@ export default function FileUpload({ onUpload }) {
     boxShadow: "0 8px 20px rgba(24, 92, 176, 0.5)",
   };
 
-  // Handlers for hover effect on button
   const handleButtonMouseEnter = (e) => {
     if (!uploading) Object.assign(e.target.style, buttonHoverStyle);
   };
