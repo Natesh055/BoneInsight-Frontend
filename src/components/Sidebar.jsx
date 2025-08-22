@@ -71,7 +71,7 @@ export default function Sidebar({ role }) {
             Upload Scan
           </Link>
         </li>
-        <li>
+        {/* <li>
           <Link
             to="/results"
             style={linkBaseStyle}
@@ -80,7 +80,7 @@ export default function Sidebar({ role }) {
           >
             Results
           </Link>
-        </li>
+        </li> */}
         {role === "patient" && (
           <li>
             <Link

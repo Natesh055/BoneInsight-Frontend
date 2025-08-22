@@ -10,7 +10,7 @@ import Login from "./routes/Login.jsx";
 import Signup from "./routes/Signup.jsx";
 import Dashboard from "./routes/Dashboard.jsx";
 import Upload from "./routes/Upload.jsx";
-import Results from "./routes/Results.jsx";
+// import Results from "./routes/Results.jsx";
 import AdminPanel from "./routes/AdminPanel.jsx";
 import XrayHistory from "./routes/XrayHistory.jsx"; // ✅ new page
 
@@ -76,7 +76,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path="/results"
           element={
             <ProtectedRoute roles={["patient", "doctor"]}>
@@ -85,7 +85,7 @@ function App() {
               </div>
             </ProtectedRoute>
           }
-        />
+        /> */}
         {/* ✅ X-ray History for patients */}
         <Route
           path="/history"
