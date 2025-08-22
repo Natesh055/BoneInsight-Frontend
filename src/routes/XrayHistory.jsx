@@ -4,7 +4,37 @@ import Navbar from "../components/Navbar.jsx";
 import Sidebar from "../components/Sidebar.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
-export default function ResultsDashboard() {
+// Blob-fetch Image component to handle auth protected image endpoints
+function XrayImage({ xrayId, token, alt, style }) {
+  const [imgUrl, setImgUrl] = useState(null);
+
+  useEffect(() => {
+    let isActive = true;
+    axios
+      .get(`${import.meta.env.VITE_API_BASE}/api/xrays/${xrayId}/image`, {
+        headers: { Authorization: `Bearer ${token}` },
+        responseType: "blob",
+      })
+      .then((res) => {
+        if (isActive) {
+          const url = URL.createObjectURL(res.data);
+          setImgUrl(url);
+        }
+      })
+      .catch(() => {
+        if (isActive) setImgUrl(null);
+      });
+    return () => {
+      isActive = false;
+      if (imgUrl) URL.revokeObjectURL(imgUrl);
+    };
+  }, [xrayId, token]);
+
+  if (!imgUrl) return <div>Loading image...</div>;
+  return <img src={imgUrl} alt={alt} style={style} />;
+}
+
+export default function XrayHistory1() {
   const { token, user } = useAuth();
   const [xrays, setXrays] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,12 +44,9 @@ export default function ResultsDashboard() {
     const fetchXrays = async () => {
       try {
         setLoading(true);
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_BASE}/api/xrays/history`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE}/api/xrays/history`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         setXrays(res.data.xrays || []);
       } catch (err) {
         console.error(err);
@@ -55,42 +82,6 @@ export default function ResultsDashboard() {
     gap: "36px",
   };
 
-  // Scan Results styles
-  const resultsCardStyle = {
-    padding: "24px",
-    borderRadius: "18px",
-    backgroundColor: "#ffffff",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.08)",
-    transition: "all 0.3s ease",
-  };
-
-  const headingStyle = {
-    fontSize: "1.9rem",
-    fontWeight: "800",
-    marginBottom: "12px",
-    color: "#2076d4",
-    letterSpacing: "0.2px",
-  };
-
-  const gridResultsStyle = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
-    gap: "20px",
-  };
-
-  const scanTitleStyle = {
-    fontWeight: "700",
-    fontSize: "1.1rem",
-    marginBottom: "6px",
-  };
-
-  const detailTextStyle = {
-    fontSize: "0.95rem",
-    color: "#4b5563",
-    margin: "4px 0",
-  };
-
-  // X-ray History grid/card styles
   const gridXrayStyle = {
     display: "grid",
     gridTemplateColumns: "repeat(auto-fill, minmax(230px, 1fr))",
@@ -135,7 +126,21 @@ export default function ResultsDashboard() {
     letterSpacing: "0.06em",
   };
 
-  // Hover handlers
+  const scanTitleStyle = {
+    fontWeight: "700",
+    fontSize: "1.1rem",
+    marginTop: "12px",
+    marginBottom: "6px",
+    textAlign: "left",
+  };
+
+  const detailTextStyle = {
+    fontSize: "0.95rem",
+    color: "#4b5563",
+    margin: "4px 0",
+    textAlign: "left",
+  };
+
   const handleCardMouseEnter = (e) => {
     Object.assign(e.currentTarget.style, {
       boxShadow: "0 12px 32px rgba(32,118,212,0.13)",
@@ -157,72 +162,6 @@ export default function ResultsDashboard() {
       <div style={mainStyle}>
         <Sidebar role={user?.role} />
         <main style={contentStyle}>
-          {/* Scan Results Section */}
-          <div
-            style={resultsCardStyle}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.boxShadow = "0 12px 28px rgba(32,118,212,0.15)")
-            }
-            onMouseLeave={(e) =>
-              (e.currentTarget.style.boxShadow = "0 6px 20px rgba(0,0,0,0.08)")
-            }
-          >
-            <h1 style={headingStyle}>Your Scan Results 🩻</h1>
-            <p style={{ fontSize: "1rem", color: "#6b7280" }}>
-              Predictions, confidence scores, and doctor notes will be displayed here.
-            </p>
-          </div>
-          {/* <div style={gridResultsStyle}>
-            <div
-              style={{ ...resultsCardStyle, borderLeft: "6px solid #16a34a" }}
-              onMouseEnter={(e) =>
-                Object.assign(e.currentTarget.style, {
-                  boxShadow: "0 10px 26px rgba(22,163,74,0.2)",
-                  transform: "translateY(-3px)",
-                })
-              }
-              onMouseLeave={(e) =>
-                Object.assign(e.currentTarget.style, {
-                  ...resultsCardStyle,
-                  borderLeft: "6px solid #16a34a",
-                })
-              }
-            >
-              <h2 style={scanTitleStyle}>✅ Scan #001</h2>
-              <p style={detailTextStyle}>
-                Prediction: <b style={{ color: "#16a34a" }}>Normal</b>
-              </p>
-              <p style={detailTextStyle}>
-                Confidence: <b style={{ color: "#2563eb" }}>95%</b>
-              </p>
-              <p style={detailTextStyle}>Doctor Notes: Everything looks fine.</p>
-            </div>
-            <div
-              style={{ ...resultsCardStyle, borderLeft: "6px solid #dc2626" }}
-              onMouseEnter={(e) =>
-                Object.assign(e.currentTarget.style, {
-                  boxShadow: "0 10px 26px rgba(220,38,38,0.2)",
-                  transform: "translateY(-3px)",
-                })
-              }
-              onMouseLeave={(e) =>
-                Object.assign(e.currentTarget.style, {
-                  ...resultsCardStyle,
-                  borderLeft: "6px solid #dc2626",
-                })
-              }
-            >
-              <h2 style={scanTitleStyle}>❌ Scan #002</h2>
-              <p style={detailTextStyle}>
-                Prediction: <b style={{ color: "#dc2626" }}>Abnormal</b>
-              </p>
-              <p style={detailTextStyle}>
-                Confidence: <b style={{ color: "#2563eb" }}>82%</b>
-              </p>
-              <p style={detailTextStyle}>Doctor Notes: Follow-up required.</p>
-            </div>
-          </div> */}
-
           {/* X-ray History Section */}
           <div>
             <h1
@@ -251,27 +190,40 @@ export default function ResultsDashboard() {
                     onMouseEnter={handleCardMouseEnter}
                     onMouseLeave={handleCardMouseLeave}
                   >
-                    <img
-                      src={`${import.meta.env.VITE_API_BASE}/${xray.filepath}`}
-                      alt={xray.filename}
-                      style={imgStyle}
-                    />
+                    <XrayImage xrayId={xray._id} token={token} alt={xray.filename} style={imgStyle} />
                     <p style={filenameStyle}>{xray.filename}</p>
                     <p style={dateStyle}>
                       Uploaded: {new Date(xray.uploadedAt).toLocaleString()}
                     </p>
 
-                    {/* Hardcoded scan info */}
-                    <div style={{ marginTop: "12px", textAlign: "left" }}>
-                      <p style={scanTitleStyle}>✅ Scan #{index + 1}</p>
-                      <p style={detailTextStyle}>
-                        Prediction: <b style={{ color: "#16a34a" }}>Normal</b>
+                    <div>
+                      <p style={scanTitleStyle}>
+                        {xray.prediction && xray.prediction.toLowerCase() === "normal"
+                          ? "Scan #"
+                          : "Scan #"}
+                        {index + 1}
                       </p>
                       <p style={detailTextStyle}>
-                        Confidence: <b style={{ color: "#2563eb" }}>95%</b>
+                        Prediction:{" "}
+                        <b
+                          style={{
+                            color:
+                              xray.prediction?.toLowerCase() === "normal"
+                                ? "#16a34a"
+                                : "#dc2626",
+                          }}
+                        >
+                          {xray.prediction || "Unknown"}
+                        </b>
                       </p>
                       <p style={detailTextStyle}>
-                        Doctor Notes: Everything looks fine.
+                        Confidence:{" "}
+                        <b style={{ color: "#2563eb" }}>
+                          {xray.confidence ? `${xray.confidence}%` : "N/A"}
+                        </b>
+                      </p>
+                      <p style={detailTextStyle}>
+                        Doctor Notes: {xray.doctorNotes || "No notes available."}
                       </p>
                     </div>
                   </div>

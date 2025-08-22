@@ -159,11 +159,6 @@ export default function Dashboard() {
               </div>
             ))}
           </section>
-
-          {/* Protected Area / Extra Info */}
-          <div style={protectedStyle}>
-            ⚠️ Only authorized users can view detailed scan reports.
-          </div>
         </main>
       </div>
     </div>

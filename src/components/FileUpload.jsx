@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext.jsx";
 import axios from "axios";
 
@@ -7,6 +7,7 @@ export default function FileUpload({ onUpload }) {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const fileInputRef = useRef(null);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -21,6 +22,7 @@ export default function FileUpload({ onUpload }) {
     }
 
     setUploading(true);
+    setError("");
 
     try {
       const formData = new FormData();
@@ -37,12 +39,11 @@ export default function FileUpload({ onUpload }) {
         }
       );
 
-      // ✅ Backward-compatible: pass uploaded metadata if backend returns it
       if (onUpload) onUpload(res.data?.xray || file);
 
-      // ✅ Backward-compatible: reset file input
+      // Reset file input value safely
       setFile(null);
-      e.target.reset();
+      if (fileInputRef.current) fileInputRef.current.value = "";
 
       alert("File uploaded successfully!");
     } catch (err) {
@@ -65,7 +66,7 @@ export default function FileUpload({ onUpload }) {
     padding: "10px",
     borderRadius: "12px",
     border: "1.5px solid #cbd5e1",
-    cursor: "pointer",
+    cursor: uploading ? "not-allowed" : "pointer",
     fontSize: "1rem",
   };
 
@@ -109,6 +110,8 @@ export default function FileUpload({ onUpload }) {
         accept="image/*"
         onChange={handleFileChange}
         style={fileInputStyle}
+        disabled={uploading}
+        ref={fileInputRef}
       />
       {error && <div style={errorStyle}>{error}</div>}
       <button

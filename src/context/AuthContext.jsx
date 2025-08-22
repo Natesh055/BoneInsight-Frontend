@@ -10,6 +10,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null); // Added error state
 
   // Load token & user from localStorage on page load
   useEffect(() => {
@@ -21,6 +22,7 @@ export function AuthProvider({ children }) {
 
   async function login(email, password) {
     setLoading(true);
+    setError(null); // Clear previous errors
     try {
       const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/auth/login`, {
         method: "POST",
@@ -33,11 +35,14 @@ export function AuthProvider({ children }) {
       setUser(data.user);
       setToken(data.accessToken);
 
-      // persist in localStorage
+      // Persist in localStorage
       localStorage.setItem("token", data.accessToken);
       localStorage.setItem("user", JSON.stringify(data.user));
 
       return data;
+    } catch (err) {
+      setError(err.message);
+      throw err; // Rethrow for UI to catch if needed
     } finally {
       setLoading(false);
     }
@@ -45,6 +50,7 @@ export function AuthProvider({ children }) {
 
   async function signup({ name, email, password, role }) {
     setLoading(true);
+    setError(null); // Clear previous errors
     try {
       const res = await fetch(`${import.meta.env.VITE_API_BASE}/api/auth/signup`, {
         method: "POST",
@@ -61,6 +67,9 @@ export function AuthProvider({ children }) {
       localStorage.setItem("user", JSON.stringify(data.user));
 
       return data;
+    } catch (err) {
+      setError(err.message);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -69,12 +78,15 @@ export function AuthProvider({ children }) {
   function logout() {
     setUser(null);
     setToken(null);
+    setError(null);
     localStorage.removeItem("token");
     localStorage.removeItem("user");
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, setUser, setToken, login, signup, logout, loading }}>
+    <AuthContext.Provider
+      value={{ user, token, setUser, setToken, login, signup, logout, loading, error }}
+    >
       {children}
     </AuthContext.Provider>
   );
